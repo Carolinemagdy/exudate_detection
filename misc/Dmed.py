@@ -45,36 +45,58 @@ class Dmed(DatasetRet):
             img = cv2.imread(imgAddress[0])
         return img
     
-    def getGT(self, id):
+    
+    def getONloc(self, id):
+        onRow = [];
+        onCol = [];
         if (id < 1 or id > self.imgNum):
-            imgGT = [];
             exit('Index exceeds dataset size of {}'.format(self.imgNum))
         else:
-            mapGzFile = [self.__baseDir+'/'+self.data[self.idMap[id]]+self.__mapGzExt]
-            # if (exists(mapGzFile[0])):
-            #     gzip(mapGzFile, obj.baseDir);
-            gndFile = [self.__baseDir+'/'+self.data[self.idMap[id]]+ self.__gndExt];
-            mapFile = [self.__baseDir+'/'+self.data[self.idMap[id]]+ self.__mapExt];
-            fMap = open(mapFile, 'r')
-            if( fMap > 0 ):
-                resImg = open(fMap, 3, 'int');
-                imgGT = open(fMap, [resImg[2] , resImg[3]], 'int');
-                close(fMap);
-                imgGT = imgGT.T
+            
+            metaFile =  [self.__baseDir+'/'+self.data[self.idMap[id]]+self.__metaExt]
+            fMeta = open(metaFile[0], 'r');
+            if( fMeta > 0 ):
+                res = fMeta.read()
+                close(fMeta);
+                #regex
+                
+                # if( ~isempty( tokRow ) && ~isempty( tokCol ) ):
+                #     onRow = str2double(tokRow{1});
+                #     onCol = str2double(tokCol{1});
+                    
+        return [onRow, onCol]
+    
+      
+    # def getGT(self, id):
+    #     if (id < 1 or id > self.imgNum):
+    #         imgGT = [];
+    #         exit('Index exceeds dataset size of {}'.format(self.imgNum))
+    #     else:
+    #         mapGzFile = [self.__baseDir+'/'+self.data[self.idMap[id]]+self.__mapGzExt]
+    #         # if (exists(mapGzFile[0])):
+    #         #     gzip(mapGzFile, obj.baseDir);
+    #         gndFile = [self.__baseDir+'/'+self.data[self.idMap[id]]+ self.__gndExt];
+    #         mapFile = [self.__baseDir+'/'+self.data[self.idMap[id]]+ self.__mapExt];
+    #         fMap = open(mapFile[0], 'r')
+    #         if( fMap > 0 ):
+    #             resImg = open(fMap, 3, 'int');
+    #             imgGT = open(fMap, [resImg[2] , resImg[3]], 'int');
+    #             close(fMap);
+    #             imgGT = imgGT.T
 
-                #get description
-                [blobInfo] = ReadGNDFile( gndFile );
-            else: 
-                #if there is not any GND file available consider it as healthy
-                blobInfo = {};
-                img = self.getImg( id );
-                imgGT = np.zeros( [img.shape[0],img.shape[1]] );
-                if( exists( mapGzFile) ):
-                    delete( mapFile );
+    #             #get description
+    #             [blobInfo] = ReadGNDFile( gndFile );
+    #         else: 
+    #             #if there is not any GND file available consider it as healthy
+    #             blobInfo = {};
+    #             img = self.getImg( id );
+    #             imgGT = np.zeros( [img.shape[0],img.shape[1]] );
+    #             if( exists( mapGzFile) ):
+    #                 delete( mapFile );
 
         
         
-        return [imgGT, blobInfo]
+    #     return [imgGT, blobInfo]
     # def isHealthy(self, id):
     #     healthy = 1;
     #     if (id < 1 or id > self.imgNum):

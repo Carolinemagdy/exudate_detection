@@ -20,8 +20,18 @@ imgAddress = [baseDir+'/'+k[b[8]]+'.map.gz'];
 # print(imgAddress)
 # img = cv2.imread( imgAddress[0] );
 # print(img)
-print(exists(imgAddress[0]))
-with gzip.open(imgAddress[0],'rb') as f_in , open(baseDir,"wb") as f_out:
-    
-    shutil.copyfileobj(f_in,f_out)
-    
+# print(exists(imgAddress[0]))
+
+#path_to_file_to_be_extracted
+
+
+#output file to be filled
+add = [baseDir+'/'+k[b[8]]+'.meta'];
+
+# with open(add[0], 'r') as f:
+
+#     contents = f.read()
+#     print(contents)
+fMeta = open(add[0], 'r');
+contents = fMeta.read()
+print(contents)
