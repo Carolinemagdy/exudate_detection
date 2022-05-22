@@ -1,4 +1,3 @@
-from matplotlib.pyplot import close
 import numpy as np
 from requests import delete
 from misc.DatasetRet import DatasetRet
@@ -32,13 +31,12 @@ class Dmed(DatasetRet):
         self.data =  [os.path.splitext(file)[0] for file in os.listdir(self.__baseDir) if file.endswith(self.__imgExt)]
         self.origImgNum = len(self.data)
         self.imgNum = self.origImgNum
-        self.idMap = [_ for _ in range(1,1+self.imgNum)]
-        
+        self.idMap = [_ for _ in range(0,self.imgNum)]
     def getNumOfImgs(self):
         return self.imgNum
     
     def getImg(self, id):
-        if (id < 1 or id > self.imgNum):
+        if (id < 0 or id > self.imgNum):
             img = [];
             exit('Index exceeds dataset size of {}'.format(self.imgNum))
         else:
@@ -50,21 +48,21 @@ class Dmed(DatasetRet):
     def getONloc(self, id):
         onRow = [];
         onCol = [];
-        if (id < 1 or id > self.imgNum):
+        if (id < 0 or id > self.imgNum):
             exit('Index exceeds dataset size of {}'.format(self.imgNum))
         else:
             
             metaFile =  [self.__baseDir+'/'+self.data[self.idMap[id]]+self.__metaExt]
+            print(metaFile)
             fMeta = open(metaFile[0], 'r');
-            if( fMeta > 0 ):
-                res = fMeta.read()
-                close(fMeta);
-                #regex
-                tokRow = re.findall('ONrow\W+([0-9\.]+)',res)
-                tokCol = re.findall('ONcol\W+([0-9\.]+)',res)
-                if( len(tokRow)>0 and len(tokCol) >0):
-                    onRow = int(tokRow[0]);
-                    onCol = int(tokCol[0]);
+            # if( fMeta > 0 ):
+            res = fMeta.read()
+            fMeta.close()
+            tokRow = re.findall('ONrow\W+([0-9\.]+)',res)
+            tokCol = re.findall('ONcol\W+([0-9\.]+)',res)
+            if( len(tokRow)>0 and len(tokCol) >0):
+                onRow = int(tokRow[0]);
+                onCol = int(tokCol[0]);
                     
         return [onRow, onCol]
     
