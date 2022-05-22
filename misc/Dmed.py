@@ -3,6 +3,7 @@ import numpy as np
 from requests import delete
 import DatasetRet
 import os
+import re
 import cv2
 from genericpath import exists
 import gzip
@@ -59,10 +60,11 @@ class Dmed(DatasetRet):
                 res = fMeta.read()
                 close(fMeta);
                 #regex
-                
-                # if( ~isempty( tokRow ) && ~isempty( tokCol ) ):
-                #     onRow = str2double(tokRow{1});
-                #     onCol = str2double(tokCol{1});
+                tokRow = re.findall('ONrow\W+([0-9\.]+)',res)
+                tokCol = re.findall('ONcol\W+([0-9\.]+)',res)
+                if( len(tokRow)>0 and len(tokCol) >0):
+                    onRow = int(tokRow[0]);
+                    onCol = int(tokCol[0]);
                     
         return [onRow, onCol]
     
