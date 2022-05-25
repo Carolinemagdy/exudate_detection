@@ -12,7 +12,7 @@ a =  [_ for _ in os.listdir(baseDir) if _.endswith(imgExt)]
 k=[os.path.splitext(file)[0] for file in os.listdir(baseDir) if file.endswith(imgExt)]
 # for file in a:
 #     k.append(os.path.splitext(file)[0])
-b=[_ for _ in range(1,170)]
+b=[_ for _ in range(0,169)]
 # # print(b)
 
 imgAddress = [baseDir+'/'+k[b[0]]+ imgExt]
@@ -42,7 +42,7 @@ print(imgAddress[0])
 # print(type(fMeta))
 import cv2
 bgr=cv2.imread(imgAddress[0])
-print(bgr[:,:,0])
+print(bgr[:,:,2])
 im_rgb = cv2.cvtColor(bgr, cv2.COLOR_BGR2RGB)
-print(im_rgb[:,:,2])
+print(im_rgb[:,:,0])
 plt.imshow(im_rgb)

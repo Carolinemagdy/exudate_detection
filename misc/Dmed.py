@@ -38,8 +38,8 @@ class Dmed(DatasetRet):
             exit('Index exceeds dataset size of {}'.format(self.imgNum))
         else:
             imgAddress = [self.__baseDir+'/'+self.data[self.idMap[id]]+self.__imgExt]
-            img = cv2.imread(imgAddress[0])
-            img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+            bgr = cv2.imread(imgAddress[0])
+            img = cv2.cvtColor(bgr, cv2.COLOR_BGR2RGB)
 
         return img
     

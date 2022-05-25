@@ -1,4 +1,4 @@
-import 
+import cv2
 def exDetect( rgbImgOrig, removeON=1, onY=905, onX=290 ):
     # exDetect: detect exudates
     #  V. 0.2 - 2010-02-01
@@ -10,8 +10,8 @@ def exDetect( rgbImgOrig, removeON=1, onY=905, onX=290 ):
     showRes = 0; # show lesions in image
     #--
     # if no parameters are given use the test image
-    if rgbImgOrig is not None :
-        rgbImgOrig = imread( 'misc/img_ex_test.jpg' );
+    if len(rgbImgOrig)==0 :
+        #try,Except
         showRes = 1;
 
     imgProb = getLesions( rgbImgOrig, showRes, removeON, onY, onX )
@@ -19,4 +19,5 @@ def exDetect( rgbImgOrig, removeON=1, onY=905, onX=290 ):
 
 
 def getLesions():
+    pass
     

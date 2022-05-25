@@ -1,11 +1,10 @@
 from misc.Dmed import Dmed
-import exDetect
+from exDetect import *
 DMEDloc = './DMED'
 data = Dmed( DMEDloc )
 for i in range (0,1):
     rgbImg = data.getImg(i) # get original image
     [onY, onX] = data.getONloc(i) # get optic nerve location
-    print(onX,onY)
     imgProb = exDetect( rgbImg, 1, onY, onX )# segment exudates
 #     % display results
 #     figure(1);
