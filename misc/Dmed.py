@@ -1,7 +1,5 @@
-import imp
-from matplotlib.pyplot import close
-from DatasetRet import *
-import DatasetRet
+import numpy as np
+from misc.DatasetRet import DatasetRet
 import os
 import re
 import cv2
@@ -30,13 +28,12 @@ class Dmed(DatasetRet):
         self.data =  [os.path.splitext(file)[0] for file in os.listdir(self.__baseDir) if file.endswith(self.__imgExt)]
         self.origImgNum = len(self.data)
         self.imgNum = self.origImgNum
-        self.idMap = [_ for _ in range(1,1+self.imgNum)]
-        
+        self.idMap = [_ for _ in range(0,self.imgNum)]
     def getNumOfImgs(self):
         return self.imgNum
     
     def getImg(self, id):
-        if (id < 1 or id > self.imgNum):
+        if (id < 0 or id > self.imgNum):
             img = [];
             exit('Index exceeds dataset size of {}'.format(self.imgNum))
         else:
@@ -50,21 +47,21 @@ class Dmed(DatasetRet):
     def getONloc(self, id):
         onRow = [];
         onCol = [];
-        if (id < 1 or id > self.imgNum):
+        if (id < 0 or id > self.imgNum):
             exit('Index exceeds dataset size of {}'.format(self.imgNum))
         else:
             
             metaFile =  [self.__baseDir+'/'+self.data[self.idMap[id]]+self.__metaExt]
+            print(metaFile)
             fMeta = open(metaFile[0], 'r');
-            if( fMeta > 0 ):
-                res = fMeta.read()
-                close(fMeta);
-                #regex
-                tokRow = re.findall('ONrow\W+([0-9\.]+)',res)
-                tokCol = re.findall('ONcol\W+([0-9\.]+)',res)
-                if( len(tokRow)>0 and len(tokCol) >0):
-                    onRow = int(tokRow[0]);
-                    onCol = int(tokCol[0]);
+            # if( fMeta > 0 ):
+            res = fMeta.read()
+            fMeta.close()
+            tokRow = re.findall('ONrow\W+([0-9\.]+)',res)
+            tokCol = re.findall('ONcol\W+([0-9\.]+)',res)
+            if( len(tokRow)>0 and len(tokCol) >0):
+                onRow = int(tokRow[0]);
+                onCol = int(tokCol[0]);
                     
         return [onRow, onCol]
     
