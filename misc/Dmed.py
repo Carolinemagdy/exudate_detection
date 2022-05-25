@@ -1,12 +1,10 @@
+import imp
 from matplotlib.pyplot import close
-import numpy as np
-from requests import delete
+from DatasetRet import *
 import DatasetRet
 import os
 import re
 import cv2
-from genericpath import exists
-import gzip
 class Dmed(DatasetRet):
     #   data
     #    origImgNum % real img num
@@ -44,6 +42,8 @@ class Dmed(DatasetRet):
         else:
             imgAddress = [self.__baseDir+'/'+self.data[self.idMap[id]]+self.__imgExt]
             img = cv2.imread(imgAddress[0])
+            img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+
         return img
     
     
