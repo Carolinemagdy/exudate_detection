@@ -1,6 +1,6 @@
 import imp
 import cv2
-from cv2 import resize
+from cv2 import resize,imread
 import numpy as np
 def exDetect( rgbImgOrig, removeON=1, onY=905, onX=290 ):
     # exDetect: detect exudates
@@ -14,8 +14,9 @@ def exDetect( rgbImgOrig, removeON=1, onY=905, onX=290 ):
     #--
     # if no parameters are given use the test image
     if len(rgbImgOrig)==0 :
-        #try,Except
-        showRes = 1;
+            exit('No image was selected')
+
+    showRes = 1
 
     imgProb = getLesions( rgbImgOrig, showRes, removeON, onY, onX )
     return imgProb 
