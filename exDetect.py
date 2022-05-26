@@ -21,7 +21,7 @@ def exDetect( rgbImgOrig, removeON=1, onY=905, onX=290 ):
     imgProb = getLesions( rgbImgOrig, showRes, removeON, onY, onX )
     return imgProb 
 
-
+ 
 def getLesions( rgbImgOrig, removeON, onY, onX ):
     winOnRatio = [1/8,1/8]
     origSize = rgbImgOrig.shape
