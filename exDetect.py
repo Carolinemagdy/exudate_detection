@@ -37,7 +37,7 @@ def getLesions( rgbImgOrig, showRes, removeON, onY, onX ):
         onX = onX * newSize[1]/origSize[1]
         onX = round(onX)
         onY = round(onY)
-        winOnSize = round(winOnRatio*newSize)
+        winOnSize = np.round(winOnRatio*newSize)
         # remove ON window from imgTh
         winOnCoordY = [onY-winOnSize[0],onY+winOnSize[0]]
         winOnCoordX = [onX-winOnSize[1],onX+winOnSize[1]]

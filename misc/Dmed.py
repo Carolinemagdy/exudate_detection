@@ -52,7 +52,6 @@ class Dmed(DatasetRet):
         else:
             
             metaFile =  [self.__baseDir+'/'+self.data[self.idMap[id]]+self.__metaExt]
-            print(metaFile)
             fMeta = open(metaFile[0], 'r');
             # if( fMeta > 0 ):
             res = fMeta.read()
