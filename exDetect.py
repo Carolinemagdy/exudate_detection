@@ -14,15 +14,15 @@ def exDetect( rgbImgOrig, removeON=1, onY=905, onX=290 ):
     #--
     # if no parameters are given use the test image
     if len(rgbImgOrig)==0 :
+            showRes = 1
             exit('No image was selected')
 
-    showRes = 1
 
     imgProb = getLesions( rgbImgOrig, showRes, removeON, onY, onX )
     return imgProb 
 
 
-def getLesions( rgbImgOrig, showRes, removeON, onY, onX ):
+def getLesions( rgbImgOrig, removeON, onY, onX ):
     winOnRatio = [1/8,1/8]
     origSize = rgbImgOrig.shape
     newSize = [750,round(750*(origSize[1]/origSize[0]))]
