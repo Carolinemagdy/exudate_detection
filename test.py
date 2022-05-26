@@ -1,5 +1,7 @@
 from misc.Dmed import Dmed
 from exDetect import *
+import matplotlib.pyplot as plt
+
 DMEDloc = './DMED'
 data = Dmed( DMEDloc )
 for i in range (0,1):
@@ -8,8 +10,9 @@ for i in range (0,1):
     imgProb = exDetect( rgbImg, 1, onY, onX )# segment exudates
 #     % display results
 #     figure(1);
-#     imagesc(rgbImg);
 #     figure(2);
+    # plt.imshow(imgProb)
+    # plt.show()
 #     imagesc(imgProb);
 #     % block execution up until an image is closed
 #     uiwait;
