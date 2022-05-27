@@ -2,6 +2,7 @@ from cProfile import label
 from tkinter import Label
 from misc.getFovMask import get_fov_mask
 from misc.KirschEdges import kirschEdges
+import matplotlib.pyplot as plt
 
 import cv2
 from cv2 import resize,imread
@@ -10,6 +11,7 @@ import scipy
 from scipy import signal
 import skimage
 from skimage import morphology, measure
+
 def exDetect( rgbImgOrig, removeON=1, onY=905, onX=290 ):
     # exDetect: detect exudates
     #  V. 0.2 - 2010-02-01
@@ -60,9 +62,6 @@ def getLesions( rgbImgOrig, removeON, onY, onX ):
             winOnCoordX[1] = newSize[1]
   
     imgFovMask = get_fov_mask( imgV8, 1, 30 )
-    import matplotlib.pyplot as plt
-    plt.imshow(imgFovMask)
-    plt.show()
     imgFovMask[int(winOnCoordY[0]):int(winOnCoordY[1]), int(winOnCoordX[0]):int(winOnCoordX[1])] = 0
     
     medBg = signal.medfilt2d(imgV8, kernel_size=round(newSize[0]/30))
@@ -71,16 +70,22 @@ def getLesions( rgbImgOrig, removeON, onY, onX ):
     maskImg = imgV8.astype(np.float)
     pxLbl = maskImg < medBg
     maskImg[pxLbl] = medBg[pxLbl]
-    medRestored = skimage.morphology.reconstruction( medBg, maskImg )
+    
+  
+    medRestored = morphology.reconstruction( medBg, maskImg )
+
     # subtract, remove fovMask and threshold
-    bgFloat=medBg.astype(np.float)
+    bgFloat=imgV8.astype(np.float)
     resFloat=medRestored.astype(np.float)
     subImg = bgFloat - resFloat
+    # plt.imshow(bgFloat,cmap="jet")
+    # plt.show()
+    # print(np.max(imgV8),np.min(imgV8),np.mean(imgV8))
     maskFloat=imgFovMask.astype(np.float)
     subImg = subImg* maskFloat
     subImg[subImg < 0] = 0
     imgThNoOD = np.uint8(subImg) > 0
-    
+
     #Calculate edge strength of lesions
     imgKirsch = kirschEdges( imgG )
     img0 = imgG * np.uint8(imgThNoOD == 0)
@@ -88,11 +93,11 @@ def getLesions( rgbImgOrig, removeON, onY, onX ):
     img0Kirsch = kirschEdges(img0recon)
     imgEdgeNoMask = imgKirsch - img0Kirsch # edge strength map
     imgEdge = maskFloat* imgEdgeNoMask
-    
+ 
     lesCandImg = np.zeros( newSize )
-    print(lesCandImg.shape)
     lblImg = measure.label(imgThNoOD,connectivity=2)
     lesCand = measure.regionprops(lblImg)
+    
     for idxLes in range(len(lesCand)):
         pxIdxList = lesCand[idxLes]
         lesCandImg[pxIdxList] = sum(imgEdge[pxIdxList]) / len(pxIdxList)
