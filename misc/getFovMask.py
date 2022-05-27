@@ -2,17 +2,34 @@ import numpy as np
 import cv2
 
 
-def get_fov_mask(img, erode_flag, se_size=10):
-    lower_thresh = 0
-    w, t = np.histogram(img, range=(0, 255))
-    difference = np.diff(w)
-    level_found = np.argwhere(difference >= lower_thresh)[0]
-    fov_mask = np.invert(img <= level_found)
-    fov_mask = np.array(fov_mask, dtype=np.uint8)
-    kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (se_size, se_size))
-    eroded_img = cv2.erode(fov_mask, kernel)
-    eroded_img[1:se_size * 2, :] = 0
-    eroded_img[:, 1:se_size * 2] = 0
-    eroded_img[-se_size * 2:, :] = 0
-    eroded_img[:, -se_size * 2:] = 0
-    return eroded_img
+def getFovMask( gImg, erodeFlag = True, seSize = 10):
+# %GETFOVMASK get a binary image of the Field of View mask '
+# gImg: green challe uint8 image '
+# erodeFlag: if set it will erode the mask '
+    #Param '
+    lowThresh = 0;
+    if( len(sys.argv) < 3):
+        seSize = 10
+    histRes = np.histogram(gImg, range=(0,255))
+    d = np.diff(histRes[0])
+    lvlFound = np.argmax( d >= lowThresh)
+
+    fovMask = ~ (gImg <= lvlFound)
+    fovMask = np.array(fovMask, dtype=np.uint8)
+    # plt.imshow(fovMask)
+    # plt.figure()
+    if len(sys.argv) > 1 and erodeFlag:
+
+        #se = sk.morphology.disk(seSize)
+        se = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (seSize, seSize))
+        #fovMask = sk.morphology.binary_erosion(fovMask,se)
+        fovMask = cv2.erode(fovMask, se)
+        #erode also borders '
+        fovMask[0:seSize*2, :] = 0
+        fovMask[:, 0:seSize*2] = 0
+        #fovMask[-seSize*2:,-seSize*2:] = 0
+        fovMask[-seSize*2:, :] = 0  #### THERE WAS A MISTAKE HERE.
+        fovMask[:, -seSize*2:] = 0
+        # plt.imshow(cv2.rotate(fovMask, cv2.cv2.ROTATE_90_COUNTERCLOCKWISE))
+
+    return fovMask

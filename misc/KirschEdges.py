@@ -1,47 +1,59 @@
 import numpy as np
 from scipy import ndimage
+import cv2
+
+def kirschEdges(gray):
+    if gray.ndim > 2:
+        raise Exception("Image should be grayscale.")
+    kernelG1 = np.array([[5, 5, 5],
+                         [-3, 0, -3],
+                         [-3, -3, -3]], dtype=np.float32) / 15
+    kernelG2 = np.array([[5, 5, -3],
+                         [5, 0, -3],
+                         [-3, -3, -3]], dtype=np.float32) / 15
+    kernelG3 = np.array([[5, -3, -3],
+                         [5, 0, -3],
+                         [5, -3, -3]], dtype=np.float32) / 15
+    kernelG4 = np.array([[-3, -3, -3],
+                         [5, 0, -3],
+                         [5, 5, -3]], dtype=np.float32) / 15
+    kernelG5 = np.array([[-3, -3, -3],
+                         [-3, 0, -3],
+                         [5, 5, 5]], dtype=np.float32) / 15
+    kernelG6 = np.array([[-3, -3, -3],
+                         [-3, 0, 5],
+                         [-3, 5, 5]], dtype=np.float32) / 15
+    kernelG7 = np.array([[-3, -3, 5],
+                         [-3, 0, 5],
+                         [-3, -3, 5]], dtype=np.float32) / 15
+    kernelG8 = np.array([[-3, 5, 5],
+                         [-3, 0, 5],
+                         [-3, -3, -3]], dtype=np.float32) / 15
+    print(gray.dtype, "Data Type")
+    x = cv2.filter2D(gray, cv2.CV_64F, kernelG1)
+    g1 = cv2.normalize(cv2.filter2D(gray, cv2.CV_64F, kernelG1), None, 0, 255, cv2.NORM_MINMAX, cv2.CV_8UC1)
+    g2 = cv2.normalize(cv2.filter2D(gray, cv2.CV_64F, kernelG2), None, 0, 255, cv2.NORM_MINMAX, cv2.CV_8UC1)
+    g3 = cv2.normalize(cv2.filter2D(gray, cv2.CV_64F, kernelG3), None, 0, 255, cv2.NORM_MINMAX, cv2.CV_8UC1)
+    g4 = cv2.normalize(cv2.filter2D(gray, cv2.CV_64F, kernelG4), None, 0, 255, cv2.NORM_MINMAX, cv2.CV_8UC1)
+    g5 = cv2.normalize(cv2.filter2D(gray, cv2.CV_64F, kernelG5), None, 0, 255, cv2.NORM_MINMAX, cv2.CV_8UC1)
+    g6 = cv2.normalize(cv2.filter2D(gray, cv2.CV_64F, kernelG6), None, 0, 255, cv2.NORM_MINMAX, cv2.CV_8UC1)
+    g7 = cv2.normalize(cv2.filter2D(gray, cv2.CV_64F, kernelG7), None, 0, 255, cv2.NORM_MINMAX, cv2.CV_8UC1)
+    g8 = cv2.normalize(cv2.filter2D(gray, cv2.CV_64F, kernelG8), None, 0, 255, cv2.NORM_MINMAX, cv2.CV_8UC1)
+    magn = cv2.max(
+        g1, cv2.max(
+            g2, cv2.max(
+                g3, cv2.max(
+                    g4, cv2.max(
+                        g5, cv2.max(
+                            g6, cv2.max(
+                                g7, g8
+                            )
+                        )
+                    )
+                )
+            )
+        )
+    )
+    return magn
 
 
-def kirschEdges(imgIn):
-    h1 = np.array([[5, -3, -3],
-                   [5, 0, -3],
-                   [5, -3, -3]])/15
-    h2 = np.array([[-3, -3, 5],
-                   [-3, 0, 5],
-                   [-3, -3, 5]])/15
-    h3 = np.array([[-3, -3, -3],
-                   [5, 0, -3],
-                   [5, 5, -3]])/15
-    h4 = np.array([[-3, 5, 5],
-                   [-3, 0, 5],
-                   [-3, -3, -3]])/15
-    h5 = np.array([[-3, -3, -3],
-                   [-3, 0, -3],
-                   [5, 5, 5]])/15
-    h6 = np.array([[5, 5, 5],
-                   [-3, 0, -3],
-                   [-3, -3, -3]])/15
-    h7 = np.array([[-3, -3, -3],
-                   [-3, 0, 5],
-                   [-3, 5, 5]])/15
-    h8 = np.array([[5, 5, -3],
-                   [5, 0, -3],
-                   [-3, -3, -3]])/15
-
-    t1 = ndimage.convolve(imgIn, h1)
-    t2 = ndimage.convolve(imgIn, h2)
-    t3 = ndimage.convolve(imgIn, h3)
-    t4 = ndimage.convolve(imgIn, h4)
-    t5 = ndimage.convolve(imgIn, h5)
-    t6 = ndimage.convolve(imgIn, h6)
-    t7 = ndimage.convolve(imgIn, h7)
-    t8 = ndimage.convolve(imgIn, h8)
-
-    imgOut = np.maximum(t1, t2)
-    imgOut = np.maximum(imgOut, t3)
-    imgOut = np.maximum(imgOut, t4)
-    imgOut = np.maximum(imgOut, t5)
-    imgOut = np.maximum(imgOut, t6)
-    imgOut = np.maximum(imgOut, t7)
-    imgOut = np.maximum(imgOut, t8)
-    return imgOut
