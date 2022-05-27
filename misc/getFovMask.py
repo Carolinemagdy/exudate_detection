@@ -1,5 +1,7 @@
 import numpy as np
 import cv2
+import sys
+import matplotlib.pyplot as plt
 
 
 def getFovMask( gImg, erodeFlag = True, seSize = 10):
@@ -16,8 +18,7 @@ def getFovMask( gImg, erodeFlag = True, seSize = 10):
 
     fovMask = ~ (gImg <= lvlFound)
     fovMask = np.array(fovMask, dtype=np.uint8)
-    # plt.imshow(fovMask)
-    # plt.figure()
+
     if len(sys.argv) > 1 and erodeFlag:
 
         #se = sk.morphology.disk(seSize)
@@ -31,5 +32,7 @@ def getFovMask( gImg, erodeFlag = True, seSize = 10):
         fovMask[-seSize*2:, :] = 0  #### THERE WAS A MISTAKE HERE.
         fovMask[:, -seSize*2:] = 0
         # plt.imshow(cv2.rotate(fovMask, cv2.cv2.ROTATE_90_COUNTERCLOCKWISE))
+        plt.imshow(fovMask,cmap="jet")
+        plt.show()
 
     return fovMask

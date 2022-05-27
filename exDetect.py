@@ -1,6 +1,6 @@
 from cProfile import label
 from tkinter import Label
-from misc.getFovMask import get_fov_mask
+from misc.getFovMask import getFovMask
 from misc.KirschEdges import kirschEdges
 import matplotlib.pyplot as plt
 
@@ -61,7 +61,7 @@ def getLesions( rgbImgOrig, removeON, onY, onX ):
         if winOnCoordX[1] > newSize[1]:
             winOnCoordX[1] = newSize[1]
   
-    imgFovMask = get_fov_mask( imgV8, 1, 30 )
+    imgFovMask = getFovMask( imgV8, 1, 30 )
     imgFovMask[int(winOnCoordY[0]):int(winOnCoordY[1]), int(winOnCoordX[0]):int(winOnCoordX[1])] = 0
     
     medBg = signal.medfilt2d(imgV8, kernel_size=round(newSize[0]/30))
