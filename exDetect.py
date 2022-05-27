@@ -37,8 +37,9 @@ def getLesions( rgbImgOrig, removeON, onY, onX ):
     origSize = rgbImgOrig.shape
     newSize = [750,round(750*(origSize[1]/origSize[0]))]
     newSize = findGoodResolutionForWavelet(newSize)
-    imgRGB = resize(rgbImgOrig, newSize)
+    imgRGB = resize(rgbImgOrig, (newSize)[::-1])
     imgG = imgRGB[:,:,1]
+
     imgHSV = cv2.cvtColor(imgRGB, cv2.COLOR_RGB2HSV)
     imgV = imgHSV[:,:,2]
     imgV8 = np.uint8(imgV*255)

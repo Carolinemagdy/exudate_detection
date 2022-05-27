@@ -10,8 +10,8 @@ def getFovMask( gImg, erodeFlag = True, seSize = 10):
 # erodeFlag: if set it will erode the mask '
     #Param '
     lowThresh = 0;
-    if( len(sys.argv) < 3):
-        seSize = 10
+    # if( len(sys.argv) < 3):
+    #     seSize = 10
     histRes = np.histogram(gImg, range=(0,255))
     d = np.diff(histRes[0])
     lvlFound = np.argmax( d >= lowThresh)
