@@ -3,7 +3,6 @@ from tkinter import Label
 from misc.getFovMask import getFovMask
 from misc.KirschEdges import kirschEdges
 import matplotlib.pyplot as plt
-
 import cv2
 from cv2 import resize,imread
 import numpy as np
@@ -11,6 +10,7 @@ import scipy
 from scipy import signal
 import skimage
 from skimage import morphology, measure
+
 
 def exDetect( rgbImgOrig, removeON=1, onY=905, onX=290 ):
     # exDetect: detect exudates
@@ -37,7 +37,8 @@ def getLesions( rgbImgOrig, removeON, onY, onX ):
     origSize = rgbImgOrig.shape
     newSize = [750,round(750*(origSize[1]/origSize[0]))]
     newSize = findGoodResolutionForWavelet(newSize)
-    imgRGB = resize(rgbImgOrig, (newSize)[::-1], interpolation = cv2.INTER_AREA)
+    newSize = newSize[::-1]
+    imgRGB = resize(rgbImgOrig, newSize, interpolation = cv2.INTER_AREA)
     imgG = imgRGB[:,:,1]
     imgHSV = cv2.cvtColor(imgRGB, cv2.COLOR_RGB2HSV)
     imgV = imgHSV[:,:,2]
@@ -45,14 +46,14 @@ def getLesions( rgbImgOrig, removeON, onY, onX ):
 
     if removeON:
         # get ON window
-        onY = onY * newSize[0]/origSize[0]
-        onX = onX * newSize[1]/origSize[1]
+        onY = onY * newSize[1]/origSize[1]
+        onX = onX * newSize[0]/origSize[0]
         onX = round(onX)
         onY = round(onY)
         winOnSize = np.round(winOnRatio*newSize)
         # remove ON window from imgTh
-        winOnCoordY = [onY-winOnSize[0],onY+winOnSize[0]]
-        winOnCoordX = [onX-winOnSize[1],onX+winOnSize[1]]
+        winOnCoordY = [onY-winOnSize[1],onY+winOnSize[1]]
+        winOnCoordX = [onX-winOnSize[0],onX+winOnSize[0]]
         if winOnCoordY[0] < 1:
             winOnCoordY[0] = 1
         if winOnCoordX[0] < 1:
@@ -95,16 +96,14 @@ def getLesions( rgbImgOrig, removeON, onY, onX ):
     imgEdgeNoMask = imgKirsch - img0Kirsch # edge strength map
     imgEdge = maskFloat* imgEdgeNoMask
  
-    lesCandImg = np.zeros( newSize )
-    lblImg = measure.label(imgThNoOD,connectivity=2)
-    lesCand = measure.regionprops(lblImg)
-    # plt.imshow(lblImg,cmap="jet")
-    # plt.show()
-    
-    for idxLes in range(len(lesCand)):
-        pxIdxList = lesCand[idxLes]
-        lesCandImg[pxIdxList] = sum(imgEdge[pxIdxList]) / len(pxIdxList)
-    lesCandImg = resize( lesCandImg, origSize[0:2] )
+    lesCandImg = np.zeros(newSize[::-1])
+    lesCand = scipy.ndimage.measurements.label(imgThNoOD, structure=np.ones((3,3)))[0]
+    for idxLes in range(lesCand.max()):
+        pxIdxList = lesCand == idxLes
+        lesCandImg[pxIdxList] = np.sum(imgEdge[pxIdxList]) / pxIdxList.sum()
+
+    lesCandImg = cv2.resize( lesCandImg, origSize[:2][::-1], interpolation=cv2.INTER_AREA)
+
     
     # if( showRes ):
     #     figure(442);
