@@ -4,6 +4,7 @@ import cv2
 from scipy.signal import filter2D
 
 
+
 def kirschEdges(gray):
     if gray.ndim > 2:
         raise Exception("Image should be grayscale.")
@@ -49,14 +50,14 @@ def kirschEdges(gray):
     # g7 = convolve2d(gray, np.rot90(kernelG7, 2), mode='valid', boundary='fill', fillvalue=0)
     # g8 = convolve2d(gray, np.rot90(kernelG8, 2), mode='valid', boundary='fill', fillvalue=0)
     # print(g1.shape)
-    g1 = cv2.filter2D(gray, cv2.CV_64F, kernelG1, -1, cv2.BORDER_CONSTANT)
-    g2 = cv2.filter2D(gray, cv2.CV_64F, kernelG2, -1, cv2.BORDER_CONSTANT)
-    g3 = cv2.filter2D(gray, cv2.CV_64F, kernelG3, -1, cv2.BORDER_CONSTANT)
-    g4 = cv2.filter2D(gray, cv2.CV_64F, kernelG4, -1, cv2.BORDER_CONSTANT)
-    g5 = cv2.filter2D(gray, cv2.CV_64F, kernelG5, -1, cv2.BORDER_CONSTANT)
-    g6 = cv2.filter2D(gray, cv2.CV_64F, kernelG6, -1, cv2.BORDER_CONSTANT)
-    g7 = cv2.filter2D(gray, cv2.CV_64F, kernelG7, -1, cv2.BORDER_CONSTANT)
-    g8 = cv2.filter2D(gray, cv2.CV_64F, kernelG8, -1, cv2.BORDER_CONSTANT)
+    g1 = cv2.filter2D(gray, cv2.CV_64F, kernelG1, anchor=(-1, -1), delta=0, borderType=cv2.BORDER_CONSTANT)
+    g2 = cv2.filter2D(gray, cv2.CV_64F, kernelG2,  anchor=(-1, -1), delta=0, borderType=cv2.BORDER_CONSTANT)
+    g3 = cv2.filter2D(gray, cv2.CV_64F, kernelG3,  anchor=(-1, -1), delta=0, borderType=cv2.BORDER_CONSTANT)
+    g4 = cv2.filter2D(gray, cv2.CV_64F, kernelG4,  anchor=(-1, -1), delta=0, borderType=cv2.BORDER_CONSTANT)
+    g5 = cv2.filter2D(gray, cv2.CV_64F, kernelG5,  anchor=(-1, -1), delta=0, borderType=cv2.BORDER_CONSTANT)
+    g6 = cv2.filter2D(gray, cv2.CV_64F, kernelG6,  anchor=(-1, -1), delta=0, borderType=cv2.BORDER_CONSTANT)
+    g7 = cv2.filter2D(gray, cv2.CV_64F, kernelG7,  anchor=(-1, -1), delta=0, borderType=cv2.BORDER_CONSTANT)
+    g8 = cv2.filter2D(gray, cv2.CV_64F, kernelG8,  anchor=(-1, -1), delta=0, borderType=cv2.BORDER_CONSTANT)
     # g2 = cv2.normalize(cv2.filter2D(gray, cv2.CV_64F, kernelG2), None, -1, 255, cv2.NORM_MINMAX, cv2.CV_8UC1)
     # g3 = cv2.normalize(cv2.filter2D(gray, cv2.CV_64F, kernelG3), None, -1, 255, cv2.NORM_MINMAX, cv2.CV_8UC1)
     # g4 = cv2.normalize(cv2.filter2D(gray, cv2.CV_64F, kernelG4), None, -1, 255, cv2.NORM_MINMAX, cv2.CV_8UC1)
