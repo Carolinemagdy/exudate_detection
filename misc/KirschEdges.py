@@ -1,6 +1,7 @@
 import numpy as np
 from scipy import ndimage
 import cv2
+from scipy.signal import filter2D
 
 
 def kirschEdges(gray):
