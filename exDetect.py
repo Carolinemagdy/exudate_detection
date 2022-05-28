@@ -37,12 +37,12 @@ def getLesions( rgbImgOrig, removeON, onY, onX ):
     origSize = rgbImgOrig.shape
     newSize = [750,round(750*(origSize[1]/origSize[0]))]
     newSize = findGoodResolutionForWavelet(newSize)
-    imgRGB = resize(rgbImgOrig, (newSize)[::-1])
+    imgRGB = resize(rgbImgOrig, (newSize)[::-1], interpolation = cv2.INTER_AREA)
     imgG = imgRGB[:,:,1]
-
     imgHSV = cv2.cvtColor(imgRGB, cv2.COLOR_RGB2HSV)
     imgV = imgHSV[:,:,2]
-    imgV8 = np.uint8(imgV*255)
+    imgV8 = np.uint8(imgV)
+
     if removeON:
         # get ON window
         onY = onY * newSize[0]/origSize[0]
@@ -98,6 +98,8 @@ def getLesions( rgbImgOrig, removeON, onY, onX ):
     lesCandImg = np.zeros( newSize )
     lblImg = measure.label(imgThNoOD,connectivity=2)
     lesCand = measure.regionprops(lblImg)
+    # plt.imshow(lblImg,cmap="jet")
+    # plt.show()
     
     for idxLes in range(len(lesCand)):
         pxIdxList = lesCand[idxLes]
