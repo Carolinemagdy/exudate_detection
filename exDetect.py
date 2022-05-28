@@ -64,7 +64,9 @@ def getLesions( rgbImgOrig, removeON, onY, onX ):
   
     imgFovMask = getFovMask( imgV8, 1, 30 )
     imgFovMask[int(winOnCoordY[0]):int(winOnCoordY[1]), int(winOnCoordX[0]):int(winOnCoordX[1])] = 0
-    
+    # plt.imshow(imgFovMask)
+    # plt.show()
+
     medBg = signal.medfilt2d(imgV8, kernel_size=round(newSize[0]/30))
     medBg=medBg.astype(np.float)
     #reconstruct bg
@@ -79,8 +81,6 @@ def getLesions( rgbImgOrig, removeON, onY, onX ):
     bgFloat=imgV8.astype(np.float)
     resFloat=medRestored.astype(np.float)
     subImg = bgFloat - resFloat
-    # plt.imshow(bgFloat,cmap="jet")
-    # plt.show()
     # print(np.max(imgV8),np.min(imgV8),np.mean(imgV8))
     maskFloat=imgFovMask.astype(np.float)
     subImg = subImg* maskFloat
@@ -91,21 +91,30 @@ def getLesions( rgbImgOrig, removeON, onY, onX ):
     imgKirsch = kirschEdges( imgG )
     img0 = imgG * np.uint8(imgThNoOD == 0)
     img0recon = morphology.reconstruction(img0, imgG)
+    
     img0Kirsch = kirschEdges(img0recon)
     imgEdgeNoMask = imgKirsch - img0Kirsch # edge strength map
     imgEdge = maskFloat* imgEdgeNoMask
  
-    lesCandImg = np.zeros( newSize )
-    lblImg = measure.label(imgThNoOD,connectivity=2)
-    lesCand = measure.regionprops(lblImg)
-    # plt.imshow(lblImg,cmap="jet")
-    # plt.show()
+    # lesCandImg = np.zeros( newSize )
+    # lblImg = measure.label(imgThNoOD,connectivity=2)
+    # lesCand = measure.regionprops(lblImg)
+    # # plt.imshow(lblImg,cmap="jet")
+    # # plt.show()
     
-    for idxLes in range(len(lesCand)):
-        pxIdxList = lesCand[idxLes]
-        lesCandImg[pxIdxList] = sum(imgEdge[pxIdxList]) / len(pxIdxList)
-    lesCandImg = resize( lesCandImg, origSize[0:2] )
+    # for idxLes in range(len(lesCand)):
+    #     pxIdxList = lesCand[idxLes]
+    #     lesCandImg[pxIdxList] = sum(imgEdge[pxIdxList]) / len(pxIdxList)
+    # lesCandImg = resize( lesCandImg, origSize[0:2] )
     
+    
+    import scipy
+    lesCandImg = np.zeros((newSize[0], newSize[1]))
+    lesCand = scipy.ndimage.measurements.label(imgThNoOD, structure=np.ones((3,3)))[0]
+    for idxLes in range(lesCand.max()):
+        pxIdxList = lesCand == idxLes
+        lesCandImg[pxIdxList] = np.sum(imgEdge[pxIdxList]) / pxIdxList.sum()
+    plt.imshow(lesCandImg)
     # if( showRes ):
     #     figure(442);
     #     imagesc( rgbImgOrig );
