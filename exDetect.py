@@ -39,8 +39,8 @@ def getLesions(rgbImgOrig, removeON, onY, onX):
     imgV8 = np.uint8(imgV)
     if removeON:
         # get ON window
-        onY = np.round(onY * newSize[1]/origSize[1])
-        onX = np.round(onX * newSize[0]/origSize[0])
+        onY = np.round(onY * newSize[0]/origSize[1])
+        onX = np.round(onX * newSize[1]/origSize[0])
 
         winOnSize = np.round(winOnRatio*newSize)
         # remove ON window from imgTh
@@ -58,7 +58,6 @@ def getLesions(rgbImgOrig, removeON, onY, onX):
 
     winOnCoordX = np.array(winOnCoordX, dtype=np.int16)
     winOnCoordY = np.array(winOnCoordY, dtype=np.int16)
-
     imgFovMask = getFovMask(imgV8, 1, 30)
     imgFovMask[winOnCoordY[0]:winOnCoordY[1], winOnCoordX[0]:winOnCoordX[1]] = 0
     imgFovMask = imgFovMask.astype(np.uint8)
@@ -77,9 +76,7 @@ def getLesions(rgbImgOrig, removeON, onY, onX):
 
     imgEdgeNoMask = imgKirsch - img0Kirsch
 
-    plot_it(imgEdgeNoMask, 'imgEdgeNoMask')
     imgEdge = imgFovMask * imgEdgeNoMask
-    plot_it(imgEdge, 'imgEdge')
     lesCandImg = np.zeros(newSize[::-1])
 
 
@@ -89,7 +86,7 @@ def getLesions(rgbImgOrig, removeON, onY, onX):
         lesCandImg[pxIdxList] = np.sum(imgEdge[pxIdxList]) / pxIdxList.sum()
 
     lesCandImg = cv2.resize(lesCandImg, origSize[:2][::-1], interpolation=cv2.INTER_AREA)
-    plot_it(lesCandImg, 'lesCandImg')
+
     return lesCandImg
 
 

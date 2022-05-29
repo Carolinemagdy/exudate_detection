@@ -46,7 +46,7 @@ class Image_Viewer_App(QMainWindow , ui):
         self.browse_bar.clear()
         self.image_info.setStyleSheet("background-color: rgb(251, 243, 255)")
         self.scene_1.clear()
-        
+
         
 
     # message = QMessageBox()
@@ -122,8 +122,8 @@ class Image_Viewer_App(QMainWindow , ui):
         imgV8 = np.uint8(imgV)
         if removeON:
             # get ON window
-            onY = np.round(onY * newSize[1]/origSize[1])
-            onX = np.round(onX * newSize[0]/origSize[0])
+            onY = np.round(onY * newSize[0]/origSize[1])
+            onX = np.round(onX * newSize[1]/origSize[0])
 
             winOnSize = np.round(winOnRatio*newSize)
             # remove ON window from imgTh

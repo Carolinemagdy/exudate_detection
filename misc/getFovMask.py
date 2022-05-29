@@ -14,17 +14,15 @@ def getFovMask( gImg, erodeFlag = True, seSize = 10):
     fovMask = ~ (gImg <= lvlFound)
     fovMask = np.array(fovMask, dtype=np.uint8)
 
-    if len(sys.argv) > 1 and erodeFlag:
 
+    se = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (seSize, seSize))
 
-        se = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (seSize, seSize))
+    fovMask = cv2.erode(fovMask, se)
 
-        fovMask = cv2.erode(fovMask, se)
-
-        fovMask[0:seSize*2, :] = 0
-        fovMask[:, 0:seSize*2] = 0
-        fovMask[-seSize*2:, :] = 0  
-        fovMask[:, -seSize*2:] = 0
+    fovMask[0:seSize*2, :] = 0
+    fovMask[:, 0:seSize*2] = 0
+    fovMask[-seSize*2:, :] = 0  
+    fovMask[:, -seSize*2:] = 0
 
 
     return fovMask
