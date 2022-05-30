@@ -57,17 +57,20 @@ class Image_Viewer_App(QMainWindow , ui):
     # message.exec_()
     
     def Browse(self):
-        '''Browse to get the image we want to interpolate'''
+        '''Browse an image to extract its exudates'''
         #Getting file path
-        self.image_path = QFileDialog.getOpenFileName(caption='Open image', filter = 'Images (*.jpg *.png)',directory='./DMED')
+        self.image_path = QFileDialog.getOpenFileName(caption='Open image', filter = 'Images (*.jpg)',directory='.')
         self.browse_bar.setText(self.image_path[0])
         #check if an image was selected
         if self.image_path[0] == '':
             return
 
+        #Clear View
+        self.image_view.update()
+        self.image_view_1.update()
+        
         #Read Image
         img = cv2.imread(self.image_path[0],cv2.IMREAD_UNCHANGED)
-
         #Display Original Image
         _,axes = self.canvas_setup(550,600,self.image_view)
         axes.imshow(img)
