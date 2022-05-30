@@ -9,8 +9,8 @@ from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.figure import Figure
 import matplotlib
 from utils import *
-from misc.getFovMask import getFovMask
-from misc.KirschEdges import kirschEdges
+from misc.getFovMask import get_fov_mask
+from misc.KirschEdges import kirsch_edges
 import scipy
 matplotlib.use('Qt5Agg')
 
@@ -153,7 +153,7 @@ class imageViewerApp(QMainWindow, ui):
         win_on_coord_x = np.array(win_on_coord_x, dtype=np.int16)
         win_on_coord_y = np.array(win_on_coord_y, dtype=np.int16)
 
-        img_fov_mask = getFovMask(img_v8, 1, 30)
+        img_fov_mask = get_fov_mask(img_v8, 30)
         img_fov_mask[win_on_coord_y[0]:win_on_coord_y[1], win_on_coord_x[0]:win_on_coord_x[1]] = 0
         img_fov_mask = img_fov_mask.astype(np.uint8)
 
@@ -161,13 +161,13 @@ class imageViewerApp(QMainWindow, ui):
 
         img_th_no_od = get_subtracted_img(img_v8, med_bg, img_fov_mask)
 
-        img_kirsch = kirschEdges(img_g)
+        img_kirsch = kirsch_edges(img_g)
 
         img0 = img_g * np.uint8(img_th_no_od == 0)
 
         img0recon = reconstruction(img0, img_g)
 
-        img0_kirsch = kirschEdges(img0recon)
+        img0_kirsch = kirsch_edges(img0recon)
 
         img_edge_no_mask = img_kirsch - img0_kirsch
         imgEdge = img_fov_mask * img_edge_no_mask
