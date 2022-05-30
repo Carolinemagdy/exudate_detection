@@ -1,28 +1,31 @@
 import numpy as np
 import cv2
-import sys
+from utils import timeit
 
 
-
-def getFovMask( gImg, erodeFlag = True, seSize = 10):
-
-    lowThresh = 0;
-    histRes = np.histogram(gImg, range=(0,255))
+@timeit
+def get_fov_mask(g_img, se_size=10):
+    """
+    Get the field of view mask.
+    :param g_img: the green channel image
+    :param se_size: the size of the structuring element
+    :return: the field of view mask
+    """
+    lowThresh = 0
+    histRes = np.histogram(g_img, range=(0, 255))
     d = np.diff(histRes[0])
-    lvlFound = np.argmax( d >= lowThresh)
+    lvlFound = np.argmax(d >= lowThresh)
 
-    fovMask = ~ (gImg <= lvlFound)
-    fovMask = np.array(fovMask, dtype=np.uint8)
+    fov_mask = ~ (g_img <= lvlFound)
+    fov_mask = np.array(fov_mask, dtype=np.uint8)
 
+    se = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (se_size, se_size))
 
-    se = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (seSize, seSize))
+    fov_mask = cv2.erode(fov_mask, se)
 
-    fovMask = cv2.erode(fovMask, se)
+    fov_mask[0:se_size*2, :] = 0
+    fov_mask[:, 0:se_size*2] = 0
+    fov_mask[-se_size*2:, :] = 0  
+    fov_mask[:, -se_size*2:] = 0
 
-    fovMask[0:seSize*2, :] = 0
-    fovMask[:, 0:seSize*2] = 0
-    fovMask[-seSize*2:, :] = 0  
-    fovMask[:, -seSize*2:] = 0
-
-
-    return fovMask
+    return fov_mask
