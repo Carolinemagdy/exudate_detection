@@ -31,7 +31,25 @@ class imageViewerApp(QMainWindow, ui):
         """Initializing interface buttons"""
         self.browse_button.clicked.connect(self.Browse)
 
-  
+    @staticmethod
+    @timeit
+    def canvas_setup(fig_width, fig_height, view, flag=True):
+        """Setting up a canvas to view an image in its graphics view"""
+        scene = QGraphicsScene()
+        figure = Figure(figsize=(fig_width / 90, fig_height / 90), dpi=90)
+        canvas = FigureCanvas(figure)
+        axes = figure.add_subplot()
+        scene.addWidget(canvas)
+        view.setScene(scene)
+        if flag:
+            figure.subplots_adjust(left=0, bottom=0, right=1, top=1, wspace=None, hspace=None)
+            axes.get_xaxis().set_visible(False)
+            axes.get_yaxis().set_visible(False)
+        else:
+            axes.get_xaxis().set_visible(True)
+            axes.get_yaxis().set_visible(True)
+        return figure, axes
+    
     def Browse(self):
         '''Browse an image to extract its exudates'''
         #Getting file path
@@ -164,26 +182,7 @@ class imageViewerApp(QMainWindow, ui):
         les_cand_img = cv2.resize(les_cand_img, original_size[:2][::-1], interpolation=cv2.INTER_AREA)
         print('regionprops', t2 - t1)
         return les_cand_img
-
-    @staticmethod
-    @timeit
-    def canvas_setup(fig_width, fig_height, view, flag=True):
-        """Setting up a canvas to view an image in its graphics view"""
-        scene = QGraphicsScene()
-        figure = Figure(figsize=(fig_width / 90, fig_height / 90), dpi=90)
-        canvas = FigureCanvas(figure)
-        axes = figure.add_subplot()
-        scene.addWidget(canvas)
-        view.setScene(scene)
-        if flag:
-            figure.subplots_adjust(left=0, bottom=0, right=1, top=1, wspace=None, hspace=None)
-            axes.get_xaxis().set_visible(False)
-            axes.get_yaxis().set_visible(False)
-        else:
-            axes.get_xaxis().set_visible(True)
-            axes.get_yaxis().set_visible(True)
-        return figure, axes
-    
+ 
 
 
 if __name__ == '__main__':
