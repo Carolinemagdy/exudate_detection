@@ -29,28 +29,9 @@ class imageViewerApp(QMainWindow, ui):
 
     def handle_buttons(self):
         """Initializing interface buttons"""
-        self.browse_button.clicked.connect(self.browse)
+        self.browse_button.clicked.connect(self.Browse)
 
-    def show_message(self):
-        """Show message for user"""
-        message = QMessageBox()
-        message.setWindowTitle("Error")
-        message.setText("This file is corrupted !")
-        message.setIcon(QMessageBox.Critical)
-        message.setStandardButtons(QMessageBox.Close | QMessageBox.Retry)
-        message.setDefaultButton(QMessageBox.Retry)
-        message.buttonClicked.connect(self.message_fn)
-        self.image_info.clear()
-        self.browse_bar.clear()
-        self.image_info.setStyleSheet("background-color: rgb(251, 243, 255)")
-        self.scene_1.clear()
-
-    # message = QMessageBox()
-    # message.setWindowTitle("Error")
-    # message.setText("Generate image First !")
-    # message.setIcon(QMessageBox.Critical)
-    # message.setStandardButtons(QMessageBox.Close)
-    # message.exec_()   
+  
     def Browse(self):
         '''Browse an image to extract its exudates'''
         #Getting file path
@@ -203,15 +184,6 @@ class imageViewerApp(QMainWindow, ui):
             axes.get_yaxis().set_visible(True)
         return figure, axes
     
-    @staticmethod
-    def critical_message(window_title, message_sent):
-        """Show error message for problem done by user"""
-        message = QMessageBox()
-        message.setWindowTitle(window_title)
-        message.setText(message_sent)
-        message.setIcon(QMessageBox.Critical)
-        message.setStandardButtons(QMessageBox.Ok)
-        message.exec_()
 
 
 if __name__ == '__main__':
