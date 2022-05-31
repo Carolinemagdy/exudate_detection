@@ -9,11 +9,11 @@
 
 #### Flow of Functions Used
 - Browse(): Browse an image to extract its exudates.
-- get_on_loc(): [onRow, onCol] Get the hand identified location of the optic nerve.
-- get_lesions(img,removeON, onY, onX) Display the image indicated by imgID with the lesions.
-  - find_good_resolution_for_wavelet(size): Find the best resolution for the wavelet transform.
-  - get_fov_mask(img, erodeFlag, seSize): Construct Field of view mask for the eye.
-  - get_median_filt(img, newSize): Perform morphological reconstruction for the median background then subtract the background from the image.
-  - get_subtracted_img(img, medBg, imgFovMask): Perform morphological reconstruction for the median background then subtract the background from the image.
-    - get_reconstructed_bkg(img, medBg): Perform a reconstruction of the background.
-  - kirsch_edges(img): detect edges using Kirsch operator. 
+- get_on_loc(): Get the hand identified location of the optic nerve.
+- get_lesions(): Display the image indicated by imgID with the lesions.
+  - find_good_resolution_for_wavelet(): Find the best resolution for the wavelet transform.
+  - get_fov_mask(): Construct Field of view mask for the eye.
+  - get_median_filt(): Perform morphological reconstruction for the median background then subtract the background from the image.
+  - get_subtracted_img(): Perform morphological reconstruction for the median background then subtract the background from the image.
+    - get_reconstructed_bkg(): Perform a reconstruction of the background.
+  - kirsch_edges(): detect edges using Kirsch operator. 
